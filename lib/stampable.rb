@@ -155,8 +155,7 @@ module Ddb #:nodoc:
           def set_updater_attribute
             return unless self.record_userstamp
             # only set updater if the record is new or has changed
-            # or contains a serialized attribute (in which case the attribute value is always updated)
-            return unless self.new_record? || self.changed? || self.class.serialized_attributes.present?
+            return unless self.new_record? || self.changed?
             if respond_to?(self.updater_attribute.to_sym) && has_stamper?
               self.send("#{self.updater_attribute}=".to_sym, self.class.stamper_class.stamper)
             end
