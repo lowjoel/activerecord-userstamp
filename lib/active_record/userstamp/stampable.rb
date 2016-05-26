@@ -72,7 +72,10 @@ module ActiveRecord::Userstamp::Stampable
       ActiveRecord::Userstamp::Utilities.remove_association(self, :updater)
       ActiveRecord::Userstamp::Utilities.remove_association(self, :deleter)
 
-      associations = ActiveRecord::Userstamp::Utilities.available_association_columns(self)
+      associations = nil
+      if ActiveRecord::Base.connected?
+        associations = ActiveRecord::Userstamp::Utilities.available_association_columns(self)
+      end
       return if associations.nil?
 
       config = ActiveRecord::Userstamp.config
