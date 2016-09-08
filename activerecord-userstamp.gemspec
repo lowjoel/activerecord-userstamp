@@ -16,17 +16,25 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_dependency 'activesupport', '~> 4.2'
-  s.add_dependency 'activerecord', '~> 4.2'
+  rails_version = ENV['RAILS_VERSION'] || 'default'
 
-  s.add_development_dependency 'actionview', '~> 4.2'
+  rails = case rails_version
+          when 'default'
+            '>= 4.0'
+          else
+            "~> #{rails_version}"
+  end
+
+  s.add_dependency 'rails', rails
+
+  s.add_development_dependency 'actionview', rails
   s.add_development_dependency 'tzinfo-data'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rdoc'
-  s.add_development_dependency 'rspec-rails', '~> 3.3'
+  s.add_development_dependency 'rspec-rails', '>= 3.3'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'coveralls'
   s.add_development_dependency 'codeclimate-test-reporter'
