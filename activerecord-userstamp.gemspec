@@ -19,18 +19,22 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  rails_version = ENV['RAILS_VERSION'] || 'default'
+  if ENV['CI'] == 'true'
+    rails_version = ENV['RAILS_VERSION'] || 'default'
 
-  rails = case rails_version
-          when 'default'
-            '>= 4.0'
-          else
-            "~> #{rails_version}"
+    rails_version = case rails_version
+            when 'default'
+              '>= 4.0'
+            else
+              "~> #{rails_version}"
+    end
+  else
+    rails_version = '>= 4.0'
   end
 
-  s.add_dependency 'rails', rails
+  s.add_dependency 'rails', rails_version
 
-  s.add_development_dependency 'actionview', rails
+  s.add_development_dependency 'actionview', rails_version
   s.add_development_dependency 'tzinfo-data'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rdoc'
