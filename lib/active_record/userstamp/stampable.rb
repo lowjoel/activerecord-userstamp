@@ -84,7 +84,7 @@ module ActiveRecord::Userstamp::Stampable
         associations.first
       belongs_to :updater, relation_options.reverse_merge(foreign_key: config.updater_attribute) if
         associations.second
-      belongs_to :deleter, relation_options.reverse_merge(foreign_key: config.deleter_attribute) if
+      belongs_to :deleter, relation_options.reverse_merge(foreign_key: config.deleter_attribute, optional: true) if
         associations.third
     end
   end
