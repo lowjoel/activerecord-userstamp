@@ -15,6 +15,7 @@ module ActiveRecord::Userstamp::Stampable
     before_validation :set_creator_attribute, on: :create, if: :record_userstamp
     before_save :set_updater_attribute, if: :record_userstamp
     before_save :set_creator_attribute, on: :create, if: :record_userstamp
+    before_save :set_company_attribute, on: :create, if: :record_userstamp
     before_destroy :set_deleter_attribute, if: :record_userstamp
   end
 
@@ -72,6 +73,7 @@ module ActiveRecord::Userstamp::Stampable
       ActiveRecord::Userstamp::Utilities.remove_association(self, :creator)
       ActiveRecord::Userstamp::Utilities.remove_association(self, :updater)
       ActiveRecord::Userstamp::Utilities.remove_association(self, :deleter)
+      ActiveRecord::Userstamp::Utilities.remove_association(self, :company)
 
       associations = ActiveRecord::Userstamp::Utilities.available_association_columns(self)
       return if associations.nil?
@@ -86,6 +88,8 @@ module ActiveRecord::Userstamp::Stampable
         associations.second
       belongs_to :deleter, relation_options.reverse_merge(foreign_key: config.deleter_attribute, optional: true) if
         associations.third
+      belongs_to :company, relation_options.reverse_merge(foreign_key: config.company_attribute, optional: true) if
+        associations.fourth
     end
   end
 
@@ -123,5 +127,15 @@ module ActiveRecord::Userstamp::Stampable
 
     ActiveRecord::Userstamp::Utilities.assign_stamper(self, deleter_association)
     save
+  end
+
+  def set_company_attribute
+    return unless has_stamper?
+
+    company_association = self.class.reflect_on_association(:company)
+    return unless company_association
+    return if company.present?
+
+    ActiveRecord::Userstamp::Utilities.assign_stamper(self, company_association)
   end
 end

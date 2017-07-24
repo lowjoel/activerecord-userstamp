@@ -33,7 +33,8 @@ module ActiveRecord::Userstamp::Utilities
 
     [config.creator_attribute.present? && columns.include?(config.creator_attribute.to_s),
      config.updater_attribute.present? && columns.include?(config.updater_attribute.to_s),
-     config.deleter_attribute.present? && columns.include?(config.deleter_attribute.to_s)]
+     config.deleter_attribute.present? && columns.include?(config.deleter_attribute.to_s),
+     config.company_attribute.present? && columns.include?(config.company_attribute.to_s),]
   rescue ActiveRecord::StatementInvalid => _
     nil
   end
@@ -54,6 +55,10 @@ module ActiveRecord::Userstamp::Utilities
         association.foreign_key
       end
 
-    record.send("#{attribute}=", stamp_value)
+    if attribute == 'company_id'
+      record.send("#{attribute}=", stamp_value.company_id)
+    else
+      record.send("#{attribute}=", stamp_value)
+    end
   end
 end
