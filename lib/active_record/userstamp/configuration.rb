@@ -46,4 +46,13 @@ module ActiveRecord::Userstamp::Configuration
   #   By default, this is set to +:deleter_id+.
   mattr_accessor :deleter_attribute
   self.deleter_attribute = :deleter_id
+
+  # !@attribute [rw] company_attribute
+  #   Determines the name of the column in the database which stores the name of the company.
+  #
+  #   Override the attribute by using the stampable class method within a model.
+  #
+  #   By default, this is set to +:company_id+.
+  mattr_accessor :company_attribute
+  self.company_attribute = :deleter_id
 end
