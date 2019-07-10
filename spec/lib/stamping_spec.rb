@@ -48,6 +48,21 @@ RSpec.describe 'Stamping', type: :model do
           expect(person.creator).to eq(@hera)
           expect(person.updater).to eq(@zeus)
         end
+
+        it 'does not reset the creator when not defined previously' do
+          expect(User.stamper).to eq(@zeus)
+          person = nil
+          Person.without_stamps do
+            person = Person.create(name: 'David', updater_id: @hera.id)
+            expect(person.creator_id).to be_nil
+            expect(person.updater_id).to eq(@hera.id)
+          end
+
+          person.name = 'Julian'
+          person.save!
+          expect(person.creator_id).to be_nil
+        end
+
       end
 
       context 'when saving without validations' do
