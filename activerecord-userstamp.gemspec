@@ -14,21 +14,18 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/lowjoel/activerecord-userstamp'
   s.license  = 'MIT'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  s.files         = Dir['**/*']
+  s.test_files    = Dir['{test,spec,features}/**/*']
+  s.executables   = Dir['bin/*'].map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
+  rails_version = '>= 5.0'
   if ENV['CI'] == 'true'
-    rails_version =
-      case ENV['RAILS_VERSION']
-      when nil, ''
-        '>= 4.1'
-      else
-        "~> #{ENV['RAILS_VERSION']}"
-      end
-  else
-    rails_version = '>= 4.1'
+    case ENV['RAILS_VERSION']
+    when nil, ''
+    else
+      rails_version = "~> #{ENV['RAILS_VERSION']}"
+    end
   end
 
   s.add_dependency 'rails', rails_version

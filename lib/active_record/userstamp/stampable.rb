@@ -14,7 +14,7 @@ module ActiveRecord::Userstamp::Stampable
     before_validation :set_updater_attribute, if: :record_userstamp
     before_validation :set_creator_attribute, on: :create, if: :record_userstamp
     before_save :set_updater_attribute, if: :record_userstamp
-    before_save :set_creator_attribute, on: :create, if: :record_userstamp
+    before_create :set_creator_attribute, if: :record_userstamp
     before_destroy :set_deleter_attribute, if: :record_userstamp
   end
 
@@ -78,16 +78,24 @@ module ActiveRecord::Userstamp::Stampable
 
       config = ActiveRecord::Userstamp.config
       klass = stamper_class.try(:name)
-      relation_options = options.reverse_merge(class_name: klass)
+      relation_options = options.reverse_merge(class_name: klass, optional: true)
 
-      belongs_to :creator, relation_options.reverse_merge(foreign_key: config.creator_attribute) if
+      # for paranoid.
+      relation_scope = nil
+      if relation_options[:with_deleted].presence
+        relation_options.delete(:with_deleted)
+        relation_scope = -> { klass.with_deleted } if klass.respond_to? 'with_deleted'
+      end
+      # for paranoid.
+
+      belongs_to :creator, relation_scope, relation_options.reverse_merge(foreign_key: config.creator_attribute) if
         associations.first
-      belongs_to :updater, relation_options.reverse_merge(foreign_key: config.updater_attribute) if
+      belongs_to :updater, relation_scope, relation_options.reverse_merge(foreign_key: config.updater_attribute) if
         associations.second
       if associations.third
         relation_options.reverse_merge!(required: false) if ActiveRecord::VERSION::MAJOR >= 5 ||
           (ActiveRecord::VERSION::MAJOR == 4 && ActiveRecord::VERSION::MINOR >= 2)
-        belongs_to :deleter, relation_options.reverse_merge(foreign_key: config.deleter_attribute)
+        belongs_to :deleter, relation_scope, relation_options.reverse_merge(foreign_key: config.deleter_attribute)
       end
     end
   end

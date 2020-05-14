@@ -31,7 +31,7 @@ module ActiveRecord::Userstamp::ControllerAdditions
   # private section of your +ApplicationController+
   def set_stamper
     @_userstamp_stamper = ActiveRecord::Userstamp.config.default_stamper_class.stamper
-    ActiveRecord::Userstamp.config.default_stamper_class.stamper = current_user
+    ActiveRecord::Userstamp.config.default_stamper_class.stamper = defined?(current_user) ? current_user : nil
   end
 
   # The {#reset_stamper} method as implemented here assumes that a +User+ model is being used as

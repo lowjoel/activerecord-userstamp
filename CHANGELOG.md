@@ -1,4 +1,12 @@
  # Changelog
+
+ ## 3.0.7 (05-5-2020)
+  * Yuhki Tokue       - Allow blank current-user
+
+ ## 3.0.6 (10-5-2018)
+  * Yuhki Tokue       - Support Rails 6.0.
+  * Yuhki Tokue       - Stampable available with soft-deleted users
+
  ## 3.0.5 (22-8-2017)
   * Jonathan Putney   - Support Rails 5.0.
   * Joel Low          - Add additional combinations to Travis build matrix.
@@ -6,11 +14,11 @@
   * Joel Low          - Respect custom stamper definitions.
 
  ## 3.0.4 (14-7-2015)
-  * Joel Low          - Allow using ActiveRecord-Userstamp with anonymous models (e.g. some 
+  * Joel Low          - Allow using ActiveRecord-Userstamp with anonymous models (e.g. some
                         `has_and_belongs_to_many` join tables.)
- 
+
  ## 3.0.3 (14-7-2015)
-  * Joel Low          - Allow using ActiveRecord-Userstamp with generated tables (e.g. 
+  * Joel Low          - Allow using ActiveRecord-Userstamp with generated tables (e.g.
                         `has_and_belongs_to_many` join tables.)
 
  ## 3.0.2 (12-7-2015)
